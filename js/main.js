@@ -213,12 +213,68 @@
     revealEls.forEach((el) => el.classList.add("visible"));
   }
 
-  /* ---------- Formulaire de contact (feedback léger) ---------- */
+  /* ---------- Formulaire de contact ----------
+     On compose un email pré-rempli. On tente d'abord le client mail du
+     visiteur (mailto:). Si aucun n'est configuré, on propose un lien direct
+     vers Gmail (web) pour que ça fonctionne quand même. */
   const form = document.getElementById("contactForm");
+  const formStatus = document.getElementById("formStatus");
+  const DEST_EMAIL = "dansloeildedavid@gmail.com";
+
   if (form) {
-    form.addEventListener("submit", () => {
-      const btn = form.querySelector('button[type="submit"]');
-      if (btn) { btn.textContent = "Ouverture de votre messagerie…"; }
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const name = form.name.value.trim();
+      const email = form.email.value.trim();
+      const phone = form.phone.value.trim();
+      const subject = form.subject.value;
+      const message = form.message.value.trim();
+
+      // Validation simple
+      if (!name || !email || !message) {
+        showStatus("Merci de remplir votre nom, votre email et votre message.", "error");
+        return;
+      }
+
+      const mailSubject = `Demande ${subject} — ${name}`;
+      const mailBody =
+        `Nom : ${name}\n` +
+        `Email : ${email}\n` +
+        (phone ? `Téléphone : ${phone}\n` : "") +
+        `Prestation souhaitée : ${subject}\n\n` +
+        `${message}`;
+
+      // Lien Gmail web : s'ouvre dans le navigateur, message pré-rempli,
+      // sans dépendre d'un logiciel mail installé sur l'appareil.
+      const gmail =
+        `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(DEST_EMAIL)}` +
+        `&su=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(mailBody)}`;
+
+      // Lien mailto : pour ceux qui ont un client mail par défaut (Outlook, Mail…).
+      const mailto =
+        `mailto:${DEST_EMAIL}?subject=${encodeURIComponent(mailSubject)}` +
+        `&body=${encodeURIComponent(mailBody)}`;
+
+      // Le bouton principal ouvre directement Gmail dans un nouvel onglet.
+      window.open(gmail, "_blank", "noopener");
+
+      // Filet de sécurité : si le navigateur bloque la nouvelle fenêtre,
+      // on laisse des liens cliquables (Gmail + client mail) sous le bouton.
+      showStatus(
+        `Votre email s'ouvre dans un nouvel onglet. ` +
+        `Rien ne s'est passé&nbsp;? ` +
+        `<a href="${gmail}" target="_blank" rel="noopener">Ouvrir Gmail</a> · ` +
+        `<a href="${mailto}">utiliser ma messagerie</a> · ` +
+        `ou écrire à ${DEST_EMAIL}`,
+        "ok"
+      );
     });
+
+    function showStatus(html, type) {
+      if (!formStatus) return;
+      formStatus.innerHTML = html;
+      formStatus.className = "form-status show " + (type === "error" ? "is-error" : "is-ok");
+    }
   }
 })();
