@@ -397,18 +397,42 @@ a { color: inherit; text-decoration: none; }
 .footer-nav a:hover { color: var(--gold-soft); }
 .footer-meta { text-align: right; color: var(--text-mute); font-size: .85rem; }
 .footer-meta .copyright { margin-top: .5rem; }
-.footer-meta .credit { margin-top: .35rem; font-size: .82rem; }
-.footer-meta .credit a {
-  color: var(--gold-soft); font-weight: 500; position: relative;
-  transition: color .3s;
-}
-.footer-meta .credit a::after {
-  content: ""; position: absolute; left: 0; bottom: -2px; width: 0; height: 1px;
-  background: var(--gold); transition: width .3s var(--ease);
-}
-.footer-meta .credit a:hover { color: var(--gold); }
-.footer-meta .credit a:hover::after { width: 100%; }
 @media (max-width: 680px) { .footer-meta { text-align: left; } }
+
+/* ---------- Bandeau agence (Digitalliancy) ---------- */
+.agency-bar {
+  background: linear-gradient(100deg, #c9a35c 0%, #e0c489 50%, #c9a35c 100%);
+  background-size: 200% 100%;
+  animation: agencyShine 6s ease-in-out infinite;
+  border-top: 1px solid rgba(0,0,0,.2);
+}
+@keyframes agencyShine { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+
+.agency-link {
+  max-width: var(--maxw); margin: 0 auto;
+  display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+  gap: .35rem 1rem; padding: 1.15rem clamp(1.2rem, 4vw, 3rem);
+  color: #1a140a; text-align: center; transition: gap .3s var(--ease);
+}
+.agency-label {
+  font-size: .82rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 600;
+  opacity: .85;
+}
+.agency-name {
+  font-family: var(--serif); font-weight: 600;
+  font-size: clamp(1.5rem, 3.5vw, 2.1rem); letter-spacing: .01em; line-height: 1;
+}
+.agency-cta {
+  font-size: .82rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  background: #1a140a; color: var(--gold-soft);
+  padding: .55rem 1.1rem; border-radius: 100px;
+  transition: transform .3s var(--ease), background .3s;
+}
+.agency-link:hover .agency-cta { transform: translateY(-2px); background: #000; }
+.agency-link:hover .agency-name { text-decoration: underline; text-underline-offset: 4px; }
+@media (max-width: 560px) {
+  .agency-link { flex-direction: column; gap: .5rem; padding: 1.3rem 1.2rem; }
+}
 
 /* ---------- Lightbox ---------- */
 .lightbox {
